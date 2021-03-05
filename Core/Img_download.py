@@ -65,9 +65,9 @@ def download_image(url:str, file_name:str, dir_path:str=None, headers:dict=None,
                     if image_size > 0:
                         print("\r\r下载%s.%s：%d%%(%.1f%s/%.1f%s) - %s" % (file_name,image_type, process, downloaded_size / unit_size, unit,
                                                                    image_size / unit_size, unit, url),
-                              end="")
+                              end="\r")
             print("\r\r", end="")
         return DownloadInfo(1, '下载成功', url, file_name, image_type, image_size, image_save_path,
                             "%.1f" % (time.time() - start_time))
     except Exception as e:
-        return DownloadInfo(-1, '下载失败[%s]' % e, url, file_name, image_type, image_size, None, 0)
+        return DownloadInfo(-1, '下载%s失败[%s]' % (url,e), url, file_name, image_type, image_size, None, 0)
