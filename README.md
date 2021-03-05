@@ -1,16 +1,21 @@
 # Easy-Download-For-Gelbooru
-Gelbooru原图简洁下载器。
+Gelbooru原图简洁下载器，可以从浏览器拖动图片或者Tag链接到下载窗口来添加新的下载任务
 
-**亮点**：可以从浏览器拖动图片或者Tag链接到下载窗口来添加新的下载任务
+**支持拖动的网页链接：**
+- https://gelbooru.com/index.php?page=post&s=list&tags=xxx
+- https://gelbooru.com/index.php?page=post&s=view&id=xxxxx
 
-## 需要安装的库requests，PyQt5，lxml
+**支持下载的媒体类型：**
+- 图像
+- 视频
 
-### py文件讲解
-- mian.py 程序入口
-- Windows.py 创建PyQt的窗口
-- Gelbooru.py 主要处理给予链接的信息页面，获取原图链接以及一些图片信息和获取Tags页面的每一页的所有原图链接
-- Img_download.py 根据图片直链，下载图片
+**其他：**
+- 可以根据图片Id，Artist，Tag等自定义下载文件名（config.json文件中配置）
+- 自定义请求headers（config.json文件中配置）
+- 支持多线程
 
-*如果没有获取到想要的Tag页面时，请检查是否配置了Cookie(即headers,可以调用Gelbooru.set_headers来设置)*
+## 需要安装库 requests，PyQt5，lxml
+
+![easy-downl-for-gelbooru.JPG](https://i.loli.net/2021/03/06/BQMSh19XnugGlJP.jpg)
 
 ***请勿滥用***
