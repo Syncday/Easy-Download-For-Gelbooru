@@ -1,17 +1,18 @@
-from PyQt5.QtWidgets import QLineEdit,QWidget,QVBoxLayout,QLabel
+from PyQt5.QtWidgets import QLineEdit,QWidget,QVBoxLayout,QLabel,QTextBrowser
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont,QColor
 from Core import Gelbooru
 import threading
 
-qwidget = None
+main_windows = None
 
-class Windows(QWidget):
+class Main_windows(QWidget):
     def __init__(self):
-        global qwidget
-        qwidget =self
-        super(Windows,self).__init__()
+        global main_windows
+        main_windows =self
+        super(Main_windows, self).__init__()
         self.setMinimumWidth(250)
+        self.setMaximumWidth(400)
         self.setMinimumHeight(180)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.setWindowTitle("Easy Download For GelBooru")
@@ -35,7 +36,7 @@ class Windows(QWidget):
     def textChanged(self,text):
         """处理添加事件"""
         self.edit_widget.setText('')
-        if len(text)<=1:
+        if text is None or len(text)<=1:
             self.edit_widget.setText('')
             return
         threading.Thread(target=self.handle_add, args=(text,)).start()
@@ -45,8 +46,8 @@ class Windows(QWidget):
             change_title("处理中...")
             Gelbooru.deal_with_url(url)
 
-
 def change_title(text:str):
-    if qwidget is None:
+    if main_windows is None:
         raise Exception("Windows为空，未创建过窗口")
-    qwidget.setWindowTitle(text)
+    main_windows.setWindowTitle(text)
+

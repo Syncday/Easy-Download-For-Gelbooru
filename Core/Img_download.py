@@ -14,7 +14,7 @@ DownloadInfo = namedtuple('DownloadInfo', ['result', 'info', 'url', 'name', 'typ
 
 def __fix_save_path(image_size: int, image_type: str, filename: str, dir_path: str, redownload_exists: bool):
     """确定下载文件的文件名和下载位置"""
-    dir_path = path.dirname(__file__) if dir_path is None else dir_path
+    dir_path = path.dirname(__file__) if dir_path is None or len(dir_path)==0 else dir_path
     save_path = path.join(dir_path, filename)
     if redownload_exists is True or image_size == 0:
         return save_path + '.' + str(image_type)
@@ -63,7 +63,7 @@ def download_image(url:str, file_name:str, dir_path:str=None, headers:dict=None,
                     downloaded_size = downloaded_size + len(data)
                     process = (downloaded_size / image_size) * 100
                     if image_size > 0:
-                        print("\r下载%s.%s：%d%%(%.1f%s/%.1f%s) - %s" % (file_name,image_type, process, downloaded_size / unit_size, unit,
+                        print("\r\r下载%s.%s：%d%%(%.1f%s/%.1f%s) - %s" % (file_name,image_type, process, downloaded_size / unit_size, unit,
                                                                    image_size / unit_size, unit, url),
                               end="")
             print("\r\r", end="")
