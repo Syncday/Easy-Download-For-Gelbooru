@@ -32,9 +32,9 @@ def deal_with_url(url: str):
             __deal_with_url_of_post(url)
         else:
             Windows.change_title('出错')
-            print("\r无法处理该链接[%s]" % url)
-    except requests.ConnectTimeout as e:
-        print("\r无法连接到网站[%s]" % e)
+            print("无法处理该链接[%s]" % url)
+    except Exception as e:
+        print("出错[%s]" % e)
         Windows.change_title('出错')
 
 
@@ -45,7 +45,7 @@ def __deal_with_url_of_post(url: str):
         html = __get_html(url)
     except Exception as e:
         Windows.change_title('出错')
-        print("\r获取图片信息失败[%s]" % e)
+        print("获取图片信息失败[%s]" % e)
         return
     artist = __get_post_artist(html)
     tags = __get_post_tags(html)
@@ -145,7 +145,7 @@ def __download(image: Image):
         Windows.change_title("取消")
     else:
         Windows.change_title("失败")
-    print("\r%s,save_path=%s" % (download_info.info, download_info.path))
+    print("%s,save_path=%s" % (download_info.info, download_info.path))
 
 
 def __decode_file_name_format(image: Image):

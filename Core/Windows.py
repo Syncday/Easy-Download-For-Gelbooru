@@ -42,7 +42,7 @@ class Main_windows(QWidget):
         threading.Thread(target=self.handle_add, args=(text,)).start()
 
     def handle_add(self,url: str):
-            print("\r处理链接[%s]" % url)
+            print("处理链接[%s]" % url)
             change_title("处理中...")
             Gelbooru.deal_with_url(url)
 
