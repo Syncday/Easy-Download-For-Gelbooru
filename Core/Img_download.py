@@ -15,16 +15,20 @@ DownloadInfo = namedtuple('DownloadInfo', ['result', 'info', 'url', 'name', 'typ
 def __fix_save_path(image_size: int, image_type: str, filename: str, dir_path: str, redownload_exists: bool):
     """确定下载文件的文件名和下载位置"""
     dir_path = path.dirname(__file__) if dir_path is None or len(dir_path)==0 else dir_path
-    save_path = path.join(dir_path, filename)
+    new_filename = filename
+    save_path = dir_path
     if redownload_exists is True or image_size == 0:
-        return save_path + '.' + str(image_type)
-    if path.exists(save_path + '.' + str(image_type)):
-        if int(image_size) == path.getsize(save_path + '.' + image_type):
-            return None
-        save_path = save_path + '-' + str(image_size)
-    if path.exists(save_path + '.' + image_type):
-        return None
-    return save_path + '.' + image_type
+        new_filename = filename+'.'+str(image_type)
+        save_path = path.join(dir_path, new_filename)
+        return save_path,new_filename
+    if path.exists(path.join(dir_path, new_filename+'.'+image_type)):
+        if int(image_size) == path.getsize(path.join(dir_path, new_filename+'.'+image_type)):
+            return None,None
+        new_filename = filename+'-'+str(image_size)
+    if path.exists(path.join(dir_path, new_filename+'.' + image_type)):
+        return None,None
+    new_filename = new_filename+ '.' + image_type
+    return path.join(dir_path, new_filename) ,new_filename
 
 
 def download_image(url:str, file_name:str, dir_path:str=None, headers:dict=None, redownload_exists:bool=False,
@@ -50,9 +54,9 @@ def download_image(url:str, file_name:str, dir_path:str=None, headers:dict=None,
 
             image_size = int(content_length)
             image_type = content_type[6:] if 'image' in content_type or 'video' in content_type else image_type
-            image_save_path = __fix_save_path(image_size, image_type, file_name, dir_path, redownload_exists)
+            image_save_path,new_filename = __fix_save_path(image_size, image_type, file_name, dir_path, redownload_exists)
             if image_save_path is None:
-                return DownloadInfo(0, '下载取消[图片%s已存在]'%file_name, url, file_name, image_type, image_size, None, 0)
+                return DownloadInfo(0, '下载取消[图片%s已存在]'%new_filename, url, new_filename, image_type, image_size, None, 0)
             unit = 'KB' if image_size < 1024 * 1024 else 'MB'
             unit_size = 1024 if unit == 'KB' else 1024 * 1024
 
@@ -63,11 +67,12 @@ def download_image(url:str, file_name:str, dir_path:str=None, headers:dict=None,
                     downloaded_size = downloaded_size + len(data)
                     process = (downloaded_size / image_size) * 100
                     if image_size > 0:
-                        print("\r下载%s.%s：%d%%(%.1f%s/%.1f%s) - %s" % (file_name,image_type, process, downloaded_size / unit_size, unit,
+                        print("\r",end='')
+                        print("\r下载%s：%d%%(%.1f%s/%.1f%s) - %s" % (new_filename, process, downloaded_size / unit_size, unit,
                                                                    image_size / unit_size, unit, url),
-                              end="\r")
+                              end="")
             print("\r",end='')
-        return DownloadInfo(1, '下载成功', url, file_name, image_type, image_size, image_save_path,
+        return DownloadInfo(1, '下载成功', url, new_filename, image_type, image_size, image_save_path,
                             "%.1f" % (time.time() - start_time))
     except Exception as e:
-        return DownloadInfo(-1, '下载%s失败[%s]' % (url,e), url, file_name, image_type, image_size, None, 0)
+        return DownloadInfo(-1, '下载失败[%s]' % e, url, new_filename, image_type, image_size, None, 0)

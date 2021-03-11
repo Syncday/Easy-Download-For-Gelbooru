@@ -8,6 +8,7 @@ from lxml import etree
 from Core.Img_download import download_image
 from Core import Windows
 from Core import Config
+from Core import HtmlSaver
 
 
 class Image:
@@ -88,7 +89,7 @@ def __deal_with_url_of_tag(url: str):
 
 def __get_html(url):
     """获取网页数据"""
-    return etree.HTML(requests.get(url, headers=headers, timeout=30).text)
+    return etree.HTML(requests.get(url, headers=headers, timeout=10).text)
 
 
 def __get_post_url_list(html) -> list:
@@ -141,6 +142,7 @@ def __download(image: Image):
                                    headers=headers)
     if download_info.result == 1:
         Windows.change_title("完成")
+        HtmlSaver.append(image, download_info.name)
     elif download_info.result == 0:
         Windows.change_title("取消")
     else:

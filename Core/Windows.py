@@ -39,7 +39,11 @@ class Main_windows(QWidget):
         if text is None or len(text)<=1:
             self.edit_widget.setText('')
             return
-        threading.Thread(target=self.handle_add, args=(text,)).start()
+        try:
+            threading.Thread(target=self.handle_add, args=(text,)).start()
+        except Exception as e:
+            print("执行出错[%s]"%e)
+
 
     def handle_add(self,url: str):
             print("处理链接[%s]" % url)
